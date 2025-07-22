@@ -16,7 +16,7 @@ model User {
 
 model Session {
   id             String   @id @default(cuid())
-  sessionId      String
+  sessionId      String   @unique
   notes          String
   conversation   Json?
   report         Json?

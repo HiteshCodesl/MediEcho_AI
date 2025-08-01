@@ -54,12 +54,13 @@ export async function POST(req: NextRequest){
          if(data === undefined) return;
          const JSONResponse = JSON.parse(data)
 
-         const result = await prismaClient.session.update({
+         await prismaClient.session.update({
             where: {
                 sessionId : sessionId 
             },
             data: {
-                report: JSONResponse
+                report: JSONResponse,
+                conversation: messages
             }
          })
          return NextResponse.json(data);

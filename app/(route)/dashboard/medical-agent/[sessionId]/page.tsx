@@ -1,13 +1,13 @@
 "use client"
 import axios from 'axios';
 import { useParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Doctor } from '../../_components/AddNewSessionDialog';
-import { Axis3D, Circle, Loader, PhoneCall, PhoneOff } from 'lucide-react';
+import { Circle, Loader, PhoneCall, PhoneOff } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Vapi from '@vapi-ai/web';
-import { Provider } from '@/app/provider';
+import { useRouter } from 'next/navigation';
 
 type sessionDetail = {
   id: string,
@@ -28,11 +28,13 @@ export default function MedicalVoiceAgent() {
   const { sessionId } = useParams();
   const [sessionDetail, setSessionDetail] = useState<sessionDetail>();
   const [callStarted, setCallStarted] = useState(false);
-  const [vapiInstance, setVapiInstance] = useState<any>();
+  const vapiInstance = useRef<Vapi | null>(null);
   const [currentRole, setCurrentRole] = useState<string | null>();
   const [liveTranscript, setLiveTranscript] = useState<string>();
   const [messages, setMessages] = useState<messages[]>([]);
+  const messageRef = useRef<messages[]>([]);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     sessionId && GetSessionDetails();
@@ -45,10 +47,24 @@ export default function MedicalVoiceAgent() {
   }
   console.log(sessionDetail?.selectedDoctor.image)
 
-  const StartCall = () => {
-    const vapi = new Vapi(process.env.NEXT_PUBLIC_VAPI_API_KEY!);
-    setVapiInstance(vapi)
+  const genrateReport = async () =>{
+    if(!messageRef.current.length || !sessionDetail){
+      console.warn("missing data", {messages, sessionDetail})
+      return;
+    }
+    const result = await axios.post('/api/medical-report', {
+      messages: messageRef.current,
+      sessionDetail: sessionDetail,
+      sessionId: sessionId
+    })
+     
+    console.log(result.data);
+    return result.data;
+  }
 
+  const StartCall = () => {
+    vapiInstance.current = new Vapi(process.env.NEXT_PUBLIC_VAPI_API_KEY!);
+    
     const VapiAgentConfig = {
       name: 'AI Medical Doctor Voice Agent',
       firstMessage: "Hi there! I'm your AI Medical Assistant. I'm here to help you with any health issues.",
@@ -72,21 +88,26 @@ export default function MedicalVoiceAgent() {
       }
     }
     //@ts-ignore
-    vapi.start(VapiAgentConfig);
+    vapiInstance.current.start(VapiAgentConfig);
 
-    vapi.on('call-start', () => {
+    vapiInstance.current.on('call-start', () => {
       setCallStarted(true);
       console.log('Call started')
     });
-    vapi.on('call-end', () => {
+    vapiInstance.current.on('call-end', async() => {
       console.log('Call ended')
       setCallStarted(false);
+
+      setTimeout(async()=>{
+        await genrateReport();
+        setLoading(false);
+      }, 1000);
     });
 
-    vapi.on('message', (message) => {
+    vapiInstance.current.on('message', (message) => {
       if (message.type === 'transcript') {
 
-        const { role, transcriptType, transcript } = message
+        const { role, transcriptType, transcript } = message;
 
         console.log(`${message.role}: ${message.transcript}`);
 
@@ -94,20 +115,24 @@ export default function MedicalVoiceAgent() {
           setLiveTranscript(transcript);
           setCurrentRole(role);
 
-        } else if (transcriptType == 'final') {
-          setMessages((prev: any) => [...prev, { role: role, text: transcript }]);
+        } else if(transcriptType == 'final') {
+          setMessages((prev: any) => {
+            const updated = [...prev, { role: role, text: transcript }]
+            messageRef.current = updated;
+            return updated;
+          });
           setLiveTranscript('');
           setCurrentRole(null);
         }
       }
     });
 
-    vapiInstance.on('speech-start', () => {
+    vapiInstance.current.on('speech-start', () => {
       console.log('Assistant started speaking');
       setCurrentRole('assistant');
     });
 
-    vapiInstance.on('speech-end', () => {
+    vapiInstance.current.on('speech-end', () => {
       console.log('Assistant stopped speaking');
       setCurrentRole('user');
     });
@@ -115,32 +140,16 @@ export default function MedicalVoiceAgent() {
 
   const endCall = async() => {
     setLoading(true);
-    if (!vapiInstance) return;
-    vapiInstance.stop();
+    if (!vapiInstance.current) return;
 
-    vapiInstance.off('call-start');
-    vapiInstance.off('call-end');
-    vapiInstance.off('message');
-
+    vapiInstance.current.stop();
+    console.log("messages", messages)
     setCallStarted(false);
-    setVapiInstance(null);
-
-    const result = await genrateReport();
+    vapiInstance.current=null;
 
     setLoading(false);
-
+    router.replace('/dashboard')
   };
-
-  const genrateReport = async () =>{
-    const result = await axios.post('api/medical-report', {
-      message: messages,
-      sessionDetail: sessionDetail,
-      sessionId: sessionId
-    })
-
-    console.log(result.data);
-    return result.data;
-  }
 
   return (
     <div className='p-10 border rounded-2xl bg-secondary'>
@@ -164,7 +173,7 @@ export default function MedicalVoiceAgent() {
         <h2 className='mt-2 text-lg'>{sessionDetail.selectedDoctor?.specialist}</h2>
         <p className='text-sm text-gray-500'>AI Medical Voice Agent</p>
 
-        <div className='mt-20 mb-10 overflow-y-auto flex flex-col items-center px-10 md:px-28 lg:px-52 xl:px-72'>
+        <div className='mt-20 mb-10 overflow-y-auto flex flex-col items-start px-10 md:px-28 lg:px-52 xl:px-72'>
           {messages?.slice(-4).map((msg, index) => (
             <h2 className='mb-3' key={index}>{msg.role}:{msg.text}</h2>
           ))}
@@ -181,7 +190,7 @@ export default function MedicalVoiceAgent() {
         {loading ? <Loader className='animate-spin' />:  <PhoneCall /> }
         Start Call
         </Button> ) : (
-          <Button onClick={endCall} variant={"destructive"}> 
+          <Button onClick={endCall} variant={"destructive"} disabled={loading}> 
           {loading ? <Loader className='animate-spin' /> : <PhoneOff />
            }
           Disconnect

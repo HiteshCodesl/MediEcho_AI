@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Vapi from '@vapi-ai/web';
 import { useRouter } from 'next/navigation';
+import { User } from '@clerk/nextjs/server';
 
 export type SessionDetail = {
   id: string,
@@ -23,7 +24,7 @@ export type SessionDetail = {
 type Report = {
   sessionId: string,
  agent: string,
- user: "anymous",
+ user: User,
  timestamp: "ISO Date string",
 chiefComplaint: string,
  summary: string,

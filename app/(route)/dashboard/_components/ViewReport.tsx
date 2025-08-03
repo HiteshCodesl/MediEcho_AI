@@ -24,7 +24,6 @@ export function ViewReport({data}: {data: SessionDetail}) {
                  <div>
                     <h2 className="text-lg text-blue-500 border-b border-blue-500">Session Info</h2>
                     <p className="mt-2"><span className="font-bold">Doctor</span> - {data.selectedDoctor.specialist}</p>
-                     <p><span className="font-bold">user</span> - {data.report.user}</p>
                      <p><span className="font-bold">Consult On</span> - {moment(new Date(data.createdAt)).fromNow()}</p>
                      <p><span className="font-bold">agent</span> - {data.report.agent}</p>
                  </div>

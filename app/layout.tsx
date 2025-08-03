@@ -10,7 +10,7 @@ import {
   UserButton,
 } from '@clerk/nextjs'
 import { Poppins } from 'next/font/google';
-import {NavigationEvents} from "./loading";
+import {NavigationEvents} from "./load";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

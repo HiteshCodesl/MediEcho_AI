@@ -13,13 +13,26 @@ export type SessionDetail = {
   id: string,
   sessionId: string,
   conversation: JSON,
-  report: JSON,
+  report: Report,
   createdAt: string,
   createdBy: string,
   notes: string,
   selectedDoctor: Doctor,
 }
 
+type Report = {
+  sessionId: string,
+ agent: string,
+ user: string,
+ timestamp: "ISO Date string",
+chiefComplaint: string,
+ summary: string,
+ symptoms: string[],
+ duration: string,
+ severity: string,
+ medicationsMentioned: string[],
+ recommendations: string[],
+}
 type messages = {
   role: string,
   text: string

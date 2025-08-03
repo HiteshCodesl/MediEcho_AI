@@ -1,10 +1,16 @@
+"use client"
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { AIDoctorAgents } from '@/shared/list'
+import { useAuth } from '@clerk/nextjs'
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 
 export function DoctorsAgentList() {
+    const {has} = useAuth();
+    if(!has || has==undefined){return};
+    const paidUser = has({plan: 'regular_plan'}) || has({plan: 'pro_plan'})
     return (
         <div className='mt-10'>
             <h2 className='font-bold text-xl text-foreground'>AI Specialist Doctors Agent</h2>
@@ -13,7 +19,9 @@ export function DoctorsAgentList() {
 
             {AIDoctorAgents.map((agent) => (
                 <div key={agent.id} className='border-2 p-3 hover:cursor-pointer'>
-
+                       {agent.subscriptionRequired && <Badge className='absolute' variant={'default'}>
+                            Premium
+                        </Badge>}
                         <Image 
                         className='w-full h-[250px] rounded-xl object-cover' 
                         alt='agent' 
@@ -27,7 +35,8 @@ export function DoctorsAgentList() {
                         </h2>
                         <p className='text-gray-500'>{agent.description}</p>
 
-                        <Button 
+                        <Button  
+                        disabled={!paidUser && agent.subscriptionRequired}
                         variant={"primary"} 
                         className='w-full mt-3 px-2 hover:scale-105'>
                         Start a Consultation 

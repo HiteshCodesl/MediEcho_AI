@@ -23,7 +23,7 @@ export type SessionDetail = {
 type Report = {
   sessionId: string,
  agent: string,
- user: string,
+ user: "anymous",
  timestamp: "ISO Date string",
 chiefComplaint: string,
  summary: string,

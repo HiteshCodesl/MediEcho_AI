@@ -10,6 +10,7 @@ import {
   UserButton,
 } from '@clerk/nextjs'
 import { Poppins } from 'next/font/google';
+import {NavigationEvents} from "./loading";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,6 +43,7 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <body
            className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <NavigationEvents />
           {children}
         </body>
       </html>

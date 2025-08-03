@@ -1,5 +1,6 @@
 import React from 'react';
-import { ArrowRight, Shield, Award, Users, Mic, Brain, Heart, Play } from 'lucide-react';
+import { ArrowRight, Shield, Award, Users, Mic, Brain, Heart, Play, Stethoscope, Loader2 } from 'lucide-react';
+import Link from 'next/link';
 
 const Hero = () => {
   return (
@@ -32,11 +33,13 @@ const Hero = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-16">
-            <button className="group bg-gradient-to-r from-blue-500 to-violet-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 transform hover:scale-105 flex items-center space-x-3">
-              <Mic className="w-5 h-5" />
+            <Link href={'/dashboard'}>
+            <button  className="group bg-gradient-to-r from-blue-500 to-violet-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 transform hover:scale-105 flex items-center space-x-3">
+              <Stethoscope className="w-5 h-5" />
               <span>Request Demo</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
             </button>
+            </Link>
             
             <button className="group glass border border-white/20 text-slate-800 px-8 py-4 rounded-xl text-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center space-x-3">
               <Play className="w-5 h-5" />

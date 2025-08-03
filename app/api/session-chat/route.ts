@@ -6,8 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 export async function POST(req: NextRequest){
     const {notes, selectedDoctor} = await req.json();
     const user = await currentUser();
-console.log("user", user)
-console.log("note", notes)
+
     if(!user || !user.primaryEmailAddress?.emailAddress){
         return NextResponse.json({error:"unauthorized"}, {status:401}) 
     };
@@ -46,12 +45,25 @@ return NextResponse.json({ error: "Error while creating session", details: `${e}
 export async function GET(req:NextRequest){
     const {searchParams} = new URL(req.url);
     const sessionId = searchParams.get("sessionId");
-    console.log("sessionId", sessionId)
+
     if(sessionId == null || !sessionId){
         return NextResponse.json("error while getting sessionId")
     }
     const user = await currentUser();
 
+    if(sessionId=='all'){
+     const result = await prismaClient.session.findMany({
+        where:{
+            createdBy: user?.primaryEmailAddress?.emailAddress
+        },
+        orderBy: {
+            id: 'desc'
+        }
+    })
+    console.log(result);
+    return NextResponse.json(result);
+    }
+    else{
     const result = await prismaClient.session.findFirst({
         where:{
             sessionId: sessionId
@@ -59,4 +71,6 @@ export async function GET(req:NextRequest){
     })
     console.log("result", result);
     return NextResponse.json(result)
+    }
+
 }

@@ -24,7 +24,6 @@ export type SessionDetail = {
 type Report = {
   sessionId: string,
  agent: string,
- user: string,
  timestamp: "ISO Date string",
 chiefComplaint: string,
  summary: string,

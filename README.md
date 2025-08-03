@@ -1,4 +1,4 @@
-# 🧠 AI Interview Assistant
+# 🧠 AI Medical Voice Assistant
 
 An intelligent, full-stack AI-powered Medical Voice Consultation SaaS platform built with modern web technologies like Next.js App Router, Prisma, PostgreSQL, Clerk for auth, OpenAI for intelligent answers, and Vapi for voice responses.
 
@@ -18,12 +18,12 @@ An intelligent, full-stack AI-powered Medical Voice Consultation SaaS platform b
 
 ## 🌟 Features
 
-✅ AI-powered Consult with Doctor.  
-✅ Based on your note Generate a specalist doctor. 
+✅ AI-powered Consult with Doctor       
+✅ Based on your note Generate a specalist doctor       
 ✅ Voice-based Q&A with Vapi  
-✅ 10+ doctor specalist for every.
-✅ Generate a Report Using your chat with doctor.
-✅ Secure authentication with Clerk.
+✅ 10+ doctor specalist for every
+✅ Generate a Report Using your chat with doctor      
+✅ Secure authentication with Clerk         
 ✅ Persistent history using Supabase + Prisma  
 ✅ Clean and modern UI with Tailwind  
 ✅ SaaS-ready structure for monetization  
@@ -32,6 +32,13 @@ An intelligent, full-stack AI-powered Medical Voice Consultation SaaS platform b
 ---
 
 ![Landing Page Preview](./public/Landing.png)
+![Dashboard Page Preview](./public/Dashboard.png)
+![Add Symptoms Page Preview](./public/BasicSymptom.png)
+![Suggested Doctor Dialog Preview](./public/Doctor.png)
+![Calling Page Preview](./public/StartedCall.png)
+![History Dashboard Preview](./public/History.png)
+![Report Preview](./public/Report.png)
+
 
 
 ## 🔐 Environment Variables

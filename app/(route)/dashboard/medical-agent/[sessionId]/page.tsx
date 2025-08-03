@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import Vapi from '@vapi-ai/web';
 import { useRouter } from 'next/navigation';
 
-type sessionDetail = {
+export type SessionDetail = {
   id: string,
   sessionId: string,
   conversation: JSON,
@@ -26,7 +26,7 @@ type messages = {
 }
 export default function MedicalVoiceAgent() {
   const { sessionId } = useParams();
-  const [sessionDetail, setSessionDetail] = useState<sessionDetail>();
+  const [sessionDetail, setSessionDetail] = useState<SessionDetail>();
   const [callStarted, setCallStarted] = useState(false);
   const vapiInstance = useRef<Vapi | null>(null);
   const [currentRole, setCurrentRole] = useState<string | null>();

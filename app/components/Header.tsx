@@ -1,6 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Stethoscope } from 'lucide-react';
+import Link from 'next/link';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -48,7 +49,7 @@ const Header = () => {
             <a href="#demo" className="text-slate-700 hover:text-blue-600 transition-colors font-medium">
               Demo
             </a>
-            <a href="#pricing" className="text-slate-700 hover:text-blue-600 transition-colors font-medium">
+            <a href='/Pricing'  className="text-slate-700 hover:text-blue-600 transition-colors font-medium">
               Pricing
             </a>
             <a href="#contact" className="text-slate-700 hover:text-blue-600 transition-colors font-medium">
@@ -85,7 +86,7 @@ const Header = () => {
               <a href="#demo" className="text-slate-700 hover:text-blue-600 transition-colors py-2">
                 Demo
               </a>
-              <a href="#pricing" className="text-slate-700 hover:text-blue-600 transition-colors py-2">
+              <a href="/billing" className="text-slate-700 hover:text-blue-600 transition-colors py-2">
                 Pricing
               </a>
               <a href="#contact" className="text-slate-700 hover:text-blue-600 transition-colors py-2">

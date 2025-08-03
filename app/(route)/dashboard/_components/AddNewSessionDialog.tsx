@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Dialog,
     DialogContent,
@@ -16,6 +16,8 @@ import { ArrowRight, Loader2 } from 'lucide-react'
 import axios from 'axios'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@clerk/nextjs'
+import { SessionDetail } from '../medical-agent/[sessionId]/page'
 
 export type Doctor = {
         id: number,
@@ -31,8 +33,25 @@ function AddConsultDialog() {
     const [note, setNote] = useState<string>();
     const [loading, setLoading] = useState(false);
     const [suggestedDoctor, setSuggestedDoctor] = useState<Doctor[]>();
-    const [selectedDoctor, setSelectedDoctor] = useState<Doctor>()
+    const [selectedDoctor, setSelectedDoctor] = useState<Doctor>();
+    const [historyList, setHistoryList] = useState<SessionDetail[]>([]);
+    
     const router = useRouter();
+
+      useEffect(()=>{
+       getHistoryList();
+       },[])
+
+      const getHistoryList = async() =>{
+      const result = await axios.get('/api/session-chat?sessionId=all');
+      console.log(result.data);
+      setHistoryList(result.data);
+    }
+
+    
+      const {has} = useAuth();
+        if(!has || has==undefined){return};
+        const paidUser = has({plan: 'regular_plan'}) || has({plan: 'pro_plan'})
 
     const GetDoctorPerNote = async()=>{
         setLoading(true);
@@ -64,7 +83,7 @@ function AddConsultDialog() {
         <div>
     <Dialog>
             <DialogTrigger asChild>
-             <Button  className="mt-3 hover:scale-105 hover:cursor-pointer" variant={'primary'}>             
+             <Button disabled={!paidUser && historyList.length >= 1 }  className="mt-3 hover:scale-105 hover:cursor-pointer" variant={'primary'}>             
                Start a Consultation
             </Button>
             </DialogTrigger>                
@@ -105,10 +124,6 @@ function AddConsultDialog() {
                             className='text-gray-500'>
                             {doctor.description}
                             </p>
-                            <Button 
-                            className='mt-2 w-full hover:cursor-pointer hover:scale-105' variant={'primary'}>
-                            Start consult
-                            </Button>
 
                             </div>
                         ))}

@@ -10,19 +10,9 @@ export async function POST(req: NextRequest){
     if(!user || !user.primaryEmailAddress?.emailAddress){
         return NextResponse.json({error:"unauthorized"}, {status:401}) 
     };
-    if(!user || !user.primaryEmailAddress?.emailAddress){
-     console.log("email or user is broke")
-    }
+  
     try{
         const sessionId = uuidv4();
-console.log("sessionId", sessionId)
-       console.log("selectedDoctor ++++", selectedDoctor , typeof selectedDoctor)
- console.log("📦 Prisma Create Input:", {
-  sessionId,
-  selectedDoctor,
-  notes,
-  createdBy: user.primaryEmailAddress?.emailAddress
-});
 
         const result = await prismaClient.session.create({
             data:{
@@ -34,11 +24,9 @@ console.log("sessionId", sessionId)
                 createdBy: user.primaryEmailAddress?.emailAddress
             }
         })
-        console.log("result from BE", result)
         return NextResponse.json(result);
     } catch(e){
-console.error("🔥 Error while creating session:", e);
-return NextResponse.json({ error: "Error while creating session", details: `${e}` }, { status: 500 });
+        return NextResponse.json({ error: "Error while creating session", details: `${e}` }, { status: 500 });
     }
 }
 
@@ -60,7 +48,6 @@ export async function GET(req:NextRequest){
             id: 'desc'
         }
     })
-    console.log(result);
     return NextResponse.json(result);
     }
     else{
@@ -69,7 +56,6 @@ export async function GET(req:NextRequest){
             sessionId: sessionId
         }
     })
-    console.log("result", result);
     return NextResponse.json(result)
     }
 

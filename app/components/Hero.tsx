@@ -36,15 +36,11 @@ const Hero = () => {
             <Link href={'/dashboard'}>
             <button  className="group bg-gradient-to-r from-blue-500 to-violet-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 transform hover:scale-105 flex items-center space-x-3">
               <Stethoscope className="w-5 h-5" />
-              <span>Request Demo</span>
+              <span>Start Your Consultation</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
             </button>
             </Link>
-            
-            <button className="group glass border border-white/20 text-slate-800 px-8 py-4 rounded-xl text-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center space-x-3">
-              <Play className="w-5 h-5" />
-              <span>Try It Now</span>
-            </button>
+           
           </div>
 
           {/* Feature Cards */}

@@ -2,6 +2,7 @@
 
 An intelligent, full-stack AI-powered Medical Voice Consultation SaaS platform built with modern web technologies like Next.js App Router, Prisma, PostgreSQL, Clerk for auth, OpenAI for intelligent answers, and Vapi for voice responses.
 
+**Due to subscription cost, AI features are disabled in the live demo. However, full integration code is available in the repository and can be re-enabled with a valid API key**
 ---
 
 ## 🔧 Tech Stack

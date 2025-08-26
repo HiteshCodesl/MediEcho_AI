@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/button';
 import Vapi from '@vapi-ai/web';
 import { useRouter } from 'next/navigation';
 import { User } from '@clerk/nextjs/server';
+import { toast } from 'sonner';
+import { SubscriptionEnded } from '../../_components/SubScription';
 
 export type SessionDetail = {
   id: string,
@@ -33,6 +35,7 @@ chiefComplaint: string,
  medicationsMentioned: string[],
  recommendations: string[],
 }
+
 type messages = {
   role: string,
   text: string
@@ -47,6 +50,7 @@ export default function MedicalVoiceAgent() {
   const [messages, setMessages] = useState<messages[]>([]);
   const messageRef = useRef<messages[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isClicked, setIsClicked] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -76,8 +80,10 @@ export default function MedicalVoiceAgent() {
   }
 
   const StartCall = () => {
+
     vapiInstance.current = new Vapi(process.env.NEXT_PUBLIC_VAPI_API_KEY!);
     
+    setLoading(true);
     const VapiAgentConfig = {
       name: 'AI Medical Doctor Voice Agent',
       firstMessage: "Hi there! I'm your AI Medical Assistant. I'm here to help you with any health issues.",
@@ -105,6 +111,7 @@ export default function MedicalVoiceAgent() {
 
     vapiInstance.current.on('call-start', () => {
       setCallStarted(true);
+      
       console.log('Call started')
     });
     vapiInstance.current.on('call-end', async() => {
@@ -142,6 +149,7 @@ export default function MedicalVoiceAgent() {
 
     vapiInstance.current.on('speech-start', () => {
       console.log('Assistant started speaking');
+      setLoading(false);
       setCurrentRole('assistant');
     });
 
@@ -198,7 +206,7 @@ export default function MedicalVoiceAgent() {
         </div>
 
         {!callStarted ? (
-        <Button variant={"primary"} onClick={StartCall} disabled=
+        <Button  variant={"primary"} onClick={ () => setIsClicked(true)}  disabled=
         {loading}>
         {loading ? <Loader className='animate-spin' />:  <PhoneCall /> }
         Start Call
@@ -209,6 +217,7 @@ export default function MedicalVoiceAgent() {
           Disconnect
           </Button>
         )}
+        <SubscriptionEnded isClicked={isClicked} setIsClicked={setIsClicked}/>
       </div>}
 
     </div>

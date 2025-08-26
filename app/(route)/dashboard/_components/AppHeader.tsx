@@ -3,10 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { Menu, X, Stethoscope } from 'lucide-react';
 import { UserButton } from '@clerk/nextjs';
 import { ModeToggle } from '@/components/ui/mode';
+import { useRouter } from 'next/navigation';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -63,7 +65,7 @@ const Header = () => {
             <ModeToggle />
             <div className='hidden md:flex space-x-6'>
             <UserButton />
-            <button className="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-violet-600 text-white rounded-xl hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 font-semibold ml-1 hover:scale-105">
+            <button onClick={() => router.push('/dashboard')} className="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-violet-600 text-white rounded-xl hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 font-semibold ml-1 hover:scale-105">
               Dashboard
             </button>
             </div>
